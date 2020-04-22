@@ -24,12 +24,21 @@ class LRUCache:
     key-value pair doesn't exist in the cache.
     """
     def get(self, key):
-        if key not in self.storage:
-            return None
-        else:
+        # if key not in self.storage:
+        #     return None
+        # else:
+        #     node = self.storage[key]
+        #     self.order.move_to_end(node)
+        #     # print(self.storage[key])
+        #     # print(node.value)
+        #     return node.value[1]
+
+        if key in self.storage:
             node = self.storage[key]
             self.order.move_to_end(node)
             return node.value[1]
+        else:
+            return None
 
     """
     Adds the given key-value pair to the cache. The newly-
@@ -42,24 +51,32 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
-        # node = self.dict[key]
-        # if self.size > self.limit:
-        #     self.storage.remove_from_tail()
-        #     self.storage.add_to_head(node)
-        # else:
-        #     self.size += 1
-        #     self.storage.add_to_head(node)
+        # if key in self.storage:
+        #     node = self.storage[key]
+        #     node.value = (key, value)
+        #     self.order.move_to_end(node)
+        #     return
+        # if len(self.order) == self.limit:
+        #     index_of_oldest = self.order.head.value[0]
+        #     print(index_of_oldest)
+        #     del self.storage[index_of_oldest]
+        #     self.order.remove_from_head()
+        
+        # self.order.add_to_tail([key, value])
+        # self.storage[key] = self.order.tail
         if key in self.storage:
             node = self.storage[key]
             node.value = (key, value)
             self.order.move_to_end(node)
             return
-        if len(self.order) == self.limit:
-            index_of_oldest = self.order.head.value[0]
-            del self.storage[index_of_oldest]
+        if self.size == self.limit:
+            oldest_key = self.order.head.value[0]
+            del self.storage[oldest_key]
             self.order.remove_from_head()
+            self.size -=1
         
-        self.order.add_to_tail([key, value])
+        self.order.add_to_tail((key, value))
         self.storage[key] = self.order.tail
-
+        self.size +=1
+            
 
